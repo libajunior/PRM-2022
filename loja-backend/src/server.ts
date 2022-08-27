@@ -1,6 +1,7 @@
 import { AppDataSource } from './data-source';
 import express from 'express';
 import cors from 'cors';
+import routes from './routes';
 
 //Instancio uma aplicação express
 const app = express();
@@ -11,6 +12,9 @@ const PORT = 3300;
 //Middleware
 app.use(cors());
 app.use(express.json());
+
+//Importa as rotas
+app.use('/server', routes);
 
 //Tento conectar ao banco e, se não conseguir, mostro o erro.
 AppDataSource.initialize()

@@ -80,10 +80,15 @@ class ProductController {
             }
 
             //Atualizo com os nos dados
-            const product = await Product.update(found.id, request.body);
+            await Product.update(found.id, request.body);
+
+            const novo = request.body;
+
+            //Altero o ID para o que veio no request
+            novo.id = found.id;
 
             //Retorno a entidade encontrada
-            return response.json(product);
+            return response.json(novo);
         } catch (e) {
             const error = e as TypeORMError;
             return response.status(500).json({message: error.message});
