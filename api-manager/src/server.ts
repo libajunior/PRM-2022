@@ -14,7 +14,6 @@ const PORT = process.env.PORT || 3300;
 
 //Middleware
 app.use(cors());
-app.use(express.json());
 
 //Rotas do proxy
 app.use('/backoffice', createProxyMiddleware({
