@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import routes from './routes';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 //Carrego as variaveis de ambiente da aplicação
 dotenv.config();
@@ -10,17 +10,22 @@ dotenv.config();
 const app = express();
 
 //Determina a porta de execução
-const PORT = process.env.PORT || 3302;
+const PORT = process.env.PORT || 3300;
 
 //Middleware
 app.use(cors());
 app.use(express.json());
 
-//Importa as rotas
-app.use('/account', routes);
+//Rotas do proxy
+app.use('/backoffice', createProxyMiddleware({
+    target: 'http://localhost:3301'
+}));
 
+app.use('/account', createProxyMiddleware({
+    target: 'http://localhost:3302'
+}));
 
 //Inicio a aplicação
 app.listen(PORT, () => {
-    console.log(`Service Account running in port ${PORT}`);
+    console.log(`API Manager running in port ${PORT}`);
 });
