@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom';
-import { useAuth } from './hook/useAuth'
-import { HomePage } from './pages/Home'
-import { LoginPage } from './pages/Login'
+import { useAuth } from './hook/useAuth';
+import { HomePage } from './pages/Home';
+import { LoginPage } from './pages/Login';
+
+import './assets/scss/global.scss';
 
 function App() {
 

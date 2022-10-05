@@ -3,6 +3,9 @@ import { Product } from './entity/Product';
 import { Category } from './entity/Category';
 import { Brand } from './entity/Brand';
 import {DataSource} from 'typeorm';
+import { Customer } from './entity/Customer';
+import { Order } from './entity/Order';
+import { OrderItem } from './entity/OrderItem';
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
@@ -13,5 +16,5 @@ export const AppDataSource = new DataSource({
     database: 'prmdb',
     synchronize: true,
     logging: true,
-    entities: [Brand, Category, Product]
+    entities: [Brand, Category, Product, Customer, Order, OrderItem]
 });
