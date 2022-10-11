@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Customer } from "./Customer";
 import { Order } from "./Order";
 import { Product } from "./Product";
@@ -8,11 +8,11 @@ export class OrderItem extends BaseEntity {
     @PrimaryGeneratedColumn() 
     id: number;
 
-    @ManyToMany(() => Order, {eager: true, nullable: false})
+    @ManyToOne(() => Order, {nullable: false})
     order: Order;
 
-    @ManyToMany(() => Product, {eager: true, nullable: false})
-    customer: Product;
+    @ManyToOne(() => Product, {eager: true, nullable: false})
+    product: Product;
 
     @Column({nullable: false})
     amount: number;
