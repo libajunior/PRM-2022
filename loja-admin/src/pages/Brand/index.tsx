@@ -1,9 +1,10 @@
 import { ColumnActionsMode, IColumn, Panel, PanelType, SelectionMode, ShimmeredDetailsList, Stack, TextField } from "@fluentui/react";
 import { IBrand } from "@typesCustom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MessageBarCustom } from "../../components/MessageBarCustom";
 import { PageToolBar } from "../../components/PageToolBar";
-import { listBrands } from "../../services/server";
+import { PanelFooterContent } from "../../components/PanelFooterContent";
+import { createBrand, listBrands } from "../../services/server";
 
 
 export function BrandPage() {
@@ -23,7 +24,7 @@ export function BrandPage() {
     const [openPanel, setOpenPanel] = useState(false);
 
     //Colunas
-    const columns:  IColumn[] = [
+    const columns: IColumn[] = [
         {
             key: 'name',
             name: 'Nome da Marca',
@@ -34,7 +35,16 @@ export function BrandPage() {
         }
     ]
 
-    useEffect(()=> {
+    //Renderizar barra de botões no panel
+    const onRenderFooterContent = (): JSX.Element => (
+        <PanelFooterContent
+            id={brand.id as number}
+            loading={loading}
+            onConfirm={handleConfirmSave}
+            onDismiss={()=> setOpenPanel(false)} />
+    );
+
+    useEffect(() => {
 
         listBrands()
             .then(result => {
@@ -42,7 +52,7 @@ export function BrandPage() {
             })
             .catch(error => {
                 setMessageError(error.message);
-                setInterval(()=>{
+                setInterval(() => {
                     handleDemissMessageBar();
                 }, 10000);
             })
@@ -59,8 +69,25 @@ export function BrandPage() {
         setBrand({
             name: ''
         });
-        
+
         setOpenPanel(true);
+    }
+    function handleConfirmSave() {console.log(brand)
+
+        createBrand(brand)
+            .then(result => {
+                setBrands([...brands, result.data]);
+            })
+            .catch(error => {
+                setMessageError(error.message);
+                setInterval(() => {
+                    handleDemissMessageBar();
+                }, 10000);
+            })
+            .finally(() => {
+                setOpenPanel(false);
+            })
+
     }
 
     return (
@@ -69,7 +96,7 @@ export function BrandPage() {
                 <PageToolBar
                     currentPageTitle="Marcas"
                     loading={loading}
-                    onNew={ handleNew }/>
+                    onNew={handleNew} />
 
                 <MessageBarCustom
                     messageError={messageError}
@@ -84,7 +111,7 @@ export function BrandPage() {
                         setKey="set"
                         enableShimmer={loading}
                         selectionMode={SelectionMode.none} />
-                </div> 
+                </div>
             </Stack>
 
             <Panel
@@ -93,7 +120,8 @@ export function BrandPage() {
                 type={PanelType.medium}
                 headerText="Cadastro de Marca"
                 isFooterAtBottom={true}
-                onDismiss={() => setOpenPanel(false)}>
+                onDismiss={() => setOpenPanel(false)}
+                onRenderFooterContent={onRenderFooterContent}>
 
                 <p>Preencha TODOS os campos obrigatórios identificados por <span className="required">*</span></p>
 
@@ -102,9 +130,10 @@ export function BrandPage() {
                         label="Nome da Marca"
                         required
                         value={brand.name}
-                        onChange={event => setBrand({...brand, name: (event.target as HTMLInputElement).value})} />
+                        onChange={event => setBrand({ ...brand, name: (event.target as HTMLInputElement).value })} />
+
+                        {JSON.stringify(brand)}
                 </Stack>
-                {JSON.stringify(brand)}
             </Panel>
         </div>
     )
