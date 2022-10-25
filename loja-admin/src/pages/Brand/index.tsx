@@ -1,10 +1,11 @@
 import { ColumnActionsMode, IColumn, Panel, PanelType, SelectionMode, ShimmeredDetailsList, Stack, TextField } from "@fluentui/react";
 import { IBrand } from "@typesCustom";
 import { useCallback, useEffect, useState } from "react";
+import { DetailsListOptions } from "../../components/DetailsListOptions";
 import { MessageBarCustom } from "../../components/MessageBarCustom";
 import { PageToolBar } from "../../components/PageToolBar";
 import { PanelFooterContent } from "../../components/PanelFooterContent";
-import { createBrand, listBrands } from "../../services/server";
+import { createBrand, deleteBrand, listBrands, updateBrand } from "../../services/server";
 
 
 export function BrandPage() {
@@ -32,6 +33,18 @@ export function BrandPage() {
             minWidth: 100,
             isResizable: false,
             columnActionsMode: ColumnActionsMode.disabled
+        }, {
+            key: 'option',
+            name: 'Opções',
+            minWidth: 60,
+            maxWidth: 60,
+            isResizable: false,
+            columnActionsMode: ColumnActionsMode.disabled,
+            onRender: (item: IBrand) => (
+                <DetailsListOptions
+                    onEdit={() => handleEdit(item)}
+                    onDelete={() => handleDelete(item)} />
+            )
         }
     ]
 
@@ -72,23 +85,65 @@ export function BrandPage() {
 
         setOpenPanel(true);
     }
-    function handleConfirmSave() {console.log(brand)
+    function handleEdit(data: IBrand) {
+        setBrand( data );
+        setOpenPanel(true);
+    }
+    function handleDelete(data: IBrand) {console.log(data)
+        deleteBrand(data)
+            .then(() => {
+                const filtered = brands.filter(item => (item.id !== data.id));
+            
+                setBrands([...filtered]);
 
-        createBrand(brand)
-            .then(result => {
-                setBrands([...brands, result.data]);
+                setMessageSuccess('Registro excluído com sucesso!');
+
+                setTimeout(() => {
+                    setMessageSuccess('');
+                }, 5000);
             })
             .catch(error => {
-                setMessageError(error.message);
-                setInterval(() => {
+                setMessageError((error as Error).message);
+                setTimeout(() => {
                     handleDemissMessageBar();
                 }, 10000);
-            })
-            .finally(() => {
+            });
+    }
+    async function handleConfirmSave() {
+
+        let result = null;
+
+        try {
+
+            if (brand.id) {
+                result = await updateBrand(brand);
+            } else {
+                result = await createBrand(brand);
+            }
+
+            const filtered = brands.filter(item => (item.id !== brand.id));
+
+            setBrands([...filtered, result.data])
+
+            setMessageSuccess('Registro salvo com sucesso!')
+
+            setTimeout(() => {
+                setMessageSuccess('');
+            }, 5000);
+
+        } catch (error) {
+
+            setMessageError((error as Error).message);
+            setTimeout(() => {
+                handleDemissMessageBar();
+            }, 10000);
+
+        } finally{
                 setOpenPanel(false);
-            })
+        }
 
     }
+    
 
     return (
         <div id="brand-page" className="main-content">
@@ -106,7 +161,7 @@ export function BrandPage() {
 
                 <div className="data-list">
                     <ShimmeredDetailsList
-                        items={brands}
+                        items={brands.sort((a,b) => a.name > b.name ? 1 : -1)}
                         columns={columns}
                         setKey="set"
                         enableShimmer={loading}
@@ -132,7 +187,6 @@ export function BrandPage() {
                         value={brand.name}
                         onChange={event => setBrand({ ...brand, name: (event.target as HTMLInputElement).value })} />
 
-                        {JSON.stringify(brand)}
                 </Stack>
             </Panel>
         </div>
