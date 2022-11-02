@@ -90,7 +90,7 @@ class AccountController {
          }
       }
 
-     //Atuaslizo um marca
+     //Atualizo um usuario
      public async update(request: Request, response: Response) {
         
         try {
