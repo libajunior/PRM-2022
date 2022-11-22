@@ -8,7 +8,7 @@ export class OrderItem extends BaseEntity {
     @PrimaryGeneratedColumn() 
     id: number;
 
-    @ManyToOne(() => Order, {nullable: false})
+    @ManyToOne(() => Order)
     order: Order;
 
     @ManyToOne(() => Product, {eager: true, nullable: false})
