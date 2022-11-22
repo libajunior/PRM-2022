@@ -1,3 +1,56 @@
+export interface IBrand {
+    id?: number;
+    name: string;
+}
+
+export interface ICategory {
+    id?: number;
+    name: string;
+}
+
+export interface IProduct {
+    id?: number;
+    name: string;
+    description?: string;
+    price: number;
+    active: string;
+    category: ICategory;
+    brand?: IBrand;
+    images?: IProductImage[];
+}
+
+export interface IProductImage {
+    id?: number;
+    imageURL: string;
+}
+
+export interface ICustomer {
+    id?: number;
+    name: string;
+    address?: string;
+    zipcode?: string;
+    state?: string;
+    city?: string;
+    uid?: string;
+}
+
+export interface IOrderItem {
+    product: IProduct;
+    amount: number;
+    value: number;
+}
+
+export interface IOrder {
+    id?: number;
+    customer: ICustomer;
+    deadline?: Date;
+    shipping?: number;
+    orderDate: Date;
+    invoicedDate?: Date;
+    canceledDate?: Date;
+    items?: IOrderItem[];
+}
+
 export interface ICredential {
     email: string;
     password: string;
@@ -5,12 +58,7 @@ export interface ICredential {
 
 export interface IUser {
     uid?: string;
-    name: string;
     email: string;
-    password?: string;
-}
-
-export interface IBrand {
-    id?: number;
     name: string;
+    password?:string;
 }

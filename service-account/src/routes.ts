@@ -21,6 +21,6 @@ routes.route('/admin/users/:uid')
 
 //Rotas da Loja
 routes.route('/loja/userCustomers')
-    .post(AccountController.createUser);
+    .post(AccountController.createUserLikeCustomer);
 
 export default routes;
