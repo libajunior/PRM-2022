@@ -20,6 +20,9 @@ export class Customer extends BaseEntity {
     @Column({nullable: true, length: 50})
     city: string;
 
+    @Column({nullable: false})
+    uid: string;
+
     @CreateDateColumn()
     createdAt: Date;
     

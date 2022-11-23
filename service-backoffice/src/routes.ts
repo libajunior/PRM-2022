@@ -51,9 +51,12 @@ routes.route('/customers/:id')
     .put(CustomerController.update)
     .delete(CustomerController.remove);
 
+routes.route('/customers/uid/:uid')
+    .get(CustomerController.showByUID) 
+
 
 //Rotas da Order
-routes.route('/order')
+routes.route('/orders')
     .get(OrderController.index)
     .post(OrderController.create);
 
