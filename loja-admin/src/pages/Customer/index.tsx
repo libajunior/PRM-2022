@@ -69,16 +69,15 @@ export function CustomerPage() {
             key: 'name', 
             name: 'Nome da Cliente', 
             fieldName: 'name', 
-            minWidth: 200, 
+            minWidth: 150, 
             isResizable: false,
             columnActionsMode:  ColumnActionsMode.disabled
         },
         {
             key: 'uid', 
             name: 'UID', 
-            fieldName: 'uid', 
-            minWidth: 300, 
-            maxWidth: 300,  
+            fieldName: 'uid',
+            minWidth: 200,  
             isResizable: false,
             columnActionsMode:  ColumnActionsMode.disabled
         },
@@ -86,7 +85,7 @@ export function CustomerPage() {
             key: 'city', 
             name: 'Cidade', 
             fieldName: 'city', 
-            minWidth: 200,  
+            minWidth: 120,  
             isResizable: false,
             columnActionsMode:  ColumnActionsMode.disabled
         },
