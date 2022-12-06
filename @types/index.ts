@@ -49,6 +49,7 @@ export interface IOrder {
     invoicedDate?: Date;
     canceledDate?: Date;
     items?: IOrderItem[];
+    status?: string;
 }
 
 export interface ICredential {
