@@ -34,13 +34,13 @@ const getProductImages = (id: number) => (api.get(`${_BACKOFFICE}/products/${id}
 
 //ORDERS
 const listOrders = () => (api.get(`${_BACKOFFICE}/orders`));
-const createOrder = (data: IProduct) => (api.post(`${_BACKOFFICE}/orders`, data));
+const createOrder = (data: IOrder) => (api.post(`${_BACKOFFICE}/orders`, data));
 const cancelOrder = (id: number) => (api.put(`${_BACKOFFICE}/orders/${id}`));
-
+const changeStatus = (data: IOrder) => (api.put(`${_BACKOFFICE}/orders/${data.id}/status`, data));
 
 //SALES
-const createSale = (data: IOrder) => (api.post(`${_BACKOFFICE}/sales`, data));
-
+const createSale = (data: IOrder) => (api.put(`${_BACKOFFICE}/orders/${data.id}/invoiced`, data));
+const listSales = () => (api.get(`${_BACKOFFICE}/sales`));
 
 //USERS
 const listUsers = () => (api.get(`${_ACCOUNT}/users`));
@@ -75,7 +75,7 @@ export {
     listCategories, createCategory, deleteCategory, updateCategory,
     listBrands, createBrand, deleteBrand, updateBrand,
     listProducts, createProduct, deleteProduct, updateProduct,getProductImages,
-    listOrders, createOrder, cancelOrder, createSale,
+    listOrders, createOrder, cancelOrder, createSale, listSales,changeStatus,
     listUsers, createUser, deleteUser, updateUser,
     listCustomers, deleteCustomer, updateCustomer,
     signInAdmin

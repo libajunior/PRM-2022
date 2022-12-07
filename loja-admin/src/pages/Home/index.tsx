@@ -9,6 +9,7 @@ import { CustomerPage } from '../Customer';
 import { LoginPage } from '../Login';
 import { OrderPage } from '../Order';
 import { ProductPage } from '../Product';
+import { SalePage } from '../Sale';
 import { UserPage } from '../User';
 
 const navLinkGroups: INavLinkGroup[] = [
@@ -125,6 +126,7 @@ export function HomePage() {
               <Route path="orders" element={<OrderPage />} />
               <Route path="customers" element={<CustomerPage />} />
               <Route path="users" element={<UserPage />} />
+              <Route path="sales" element={<SalePage />} />
             </Routes>
           </Stack>
         </Stack>

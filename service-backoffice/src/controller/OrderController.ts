@@ -1,5 +1,6 @@
+import { Sale } from './../entity/Sale';
 import { Request, Response } from "express";
-import { TypeORMError } from "typeorm";
+import { IsNull, TypeORMError } from "typeorm";
 import { Order } from "../entity/Order";
 
 
@@ -8,7 +9,11 @@ class OrderController {
     public async index(request: Request, response: Response) {
         try {
             //Buscar TODOS os registros do banco
-            const orders = await Order.find();
+            const orders = await Order.find({
+                where: {
+                    invoicedDate: IsNull()
+                }
+            });
 
             //Retorno a lista
             return response.json(orders);
@@ -98,6 +103,89 @@ class OrderController {
         }
     }
 
+    public async invoiced(request: Request, response: Response) {
+        try {
+            //Pego o ID que foi enviado por request param
+            const {id} = request.params;
+
+            //Verifico se veio o parametro ID
+            if (!id) {
+                return response.status(400).json({message: 'Parâmetro ID não informado'})
+            }
+
+            //Busco a entity no banco pelo ID
+            const found = await Order.findOneBy({
+                id: Number(id)
+            });
+
+            //Verifico se encontrou a brand
+            if (!found) {
+                return response.status(404).json({message: 'Recurso não encontrado'})
+            }
+
+            //Percorre os itens e monta o total
+            let total = 0;
+            for (let itemOrder of found.items) {
+                total += (itemOrder.amount * itemOrder.product.price)
+            }
+
+            //Preparo a venda para salvar
+            const sale: any = {
+                order: found,
+                saleDate: new Date(),
+                total: total
+            }
+
+            //Salvo a venda
+            await Sale.save(sale);
+
+            //Determina a data de faturamento (este campo indica que o pedido está faturado)
+            request.body.invoicedDate = new Date();
+
+            //Determina o status do pedido
+            request.body.status = 'Novo';
+
+            //Atualizo com os nos dados
+            const novo = await Order.save(request.body);
+
+            //Retorno a entidade encontrada
+            return response.json(novo);
+        } catch (e) {
+            const error = e as TypeORMError;
+            return response.status(500).json({message: error.message});
+        }
+    }
+
+    public async changeStatus(request: Request, response: Response) {
+        try {
+            //Pego o ID que foi enviado por request param
+            const {id} = request.params;
+
+            //Verifico se veio o parametro ID
+            if (!id) {
+                return response.status(400).json({message: 'Parâmetro ID não informado'})
+            }
+
+            //Busco a entity no banco pelo ID
+            const found = await Order.findOneBy({
+                id: Number(id)
+            });
+
+            //Verifico se encontrou a brand
+            if (!found) {
+                return response.status(404).json({message: 'Recurso não encontrado'})
+            }
+
+            //Atualizo com os nos dados
+            const novo = await Order.save(request.body);
+
+            //Retorno a entidade encontrada
+            return response.json(novo);
+        } catch (e) {
+            const error = e as TypeORMError;
+            return response.status(500).json({message: error.message});
+        }
+    }
 }
 
 export default new OrderController();

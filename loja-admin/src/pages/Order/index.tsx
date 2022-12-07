@@ -19,7 +19,7 @@ import {
 } from "@fluentui/react";
 
 //API
-import { listOrders } from "../../services/server";
+import { createSale, listOrders } from "../../services/server";
 
 //TYPES
 import { IOrder } from "@typesCustom";
@@ -194,6 +194,21 @@ export function OrderPage() {
 
     }
     function handleInvoice(item: IOrder) {
+        createSale(item)
+            .then(result => {
+                const filteredTasks = orders.filter(itemFilter => itemFilter.id !== order.id);
+                setOrders([...filteredTasks])
+                setMessageSuccess('Venda efetuada com sucesso');
+                setInterval(() => {
+                    setMessageSuccess('');
+                }, 5000);
+            })
+            .catch(error => { console.log(error)
+                setMessageError(error.message);
+                setInterval(() => {
+                    setMessageError('');
+                }, 10000);
+            });
 
     }
 

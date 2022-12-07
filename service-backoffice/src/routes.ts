@@ -4,6 +4,7 @@ import CategoryController from './controller/CategoryController';
 import CustomerController from './controller/CustomerController';
 import OrderController from './controller/OrderController';
 import ProductController from './controller/ProductController';
+import SaleController from './controller/SaleController';
 
 //Instancio o reouter do express
 const routes = Router();
@@ -60,8 +61,18 @@ routes.route('/orders')
     .get(OrderController.index)
     .post(OrderController.create);
 
-routes.route('/order/:id')
+routes.route('/orders/:id')
     .get(OrderController.show)
     .put(OrderController.canceled);
+
+routes.route('/orders/:id/invoiced')
+    .put(OrderController.invoiced);  
+
+routes.route('/orders/:id/status')
+    .put(OrderController.changeStatus);      
+
+//Rotas da Order
+routes.route('/sales')
+    .get(SaleController.index)
 
 export default routes;

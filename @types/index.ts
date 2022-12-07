@@ -63,3 +63,10 @@ export interface IUser {
     name: string;
     password?:string;
 }
+
+export interface ISale {
+    id?: number;
+    order: IOrder;
+    saleDate: Date;
+    total: number;
+}
